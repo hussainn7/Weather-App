@@ -3,8 +3,7 @@ from pathlib import Path
 import requests
 from datetime import datetime
 
-# Function to fetch weather data
-def fetch_weather_data(city_name="bishkek", api_key="b9cd298593ba9f5db898d737ff3107bd"):
+def fetch_weather_data(city_name="CITY-NAME", api_key="YOUR_API_WEATHER"):
     weather_url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}'
     response = requests.get(weather_url)
     weather_info = response.json()
@@ -18,8 +17,7 @@ def fetch_weather_data(city_name="bishkek", api_key="b9cd298593ba9f5db898d737ff3
     else:
         return None, None, "Weather data not found!"
 
-# Function to fetch air pollution data
-# Function to fetch air pollution data
+
 def fetch_air_pollution_data(lat=42.8746, lon=74.5698, api_key="b9cd298593ba9f5db898d737ff3107bd"):
     url = f"https://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={api_key}"
     response = requests.get(url)
@@ -27,14 +25,13 @@ def fetch_air_pollution_data(lat=42.8746, lon=74.5698, api_key="b9cd298593ba9f5d
 
     if data.get("list"):
         pm25_concentration = data["list"][0]["components"]["pm2_5"]
-        return round(pm25_concentration)  # Ensure the return value is a float
+        return round(pm25_concentration)
     else:
         return 0.0
 
-# Function to calculate AQI from PM2.5 - make sure to handle cases where data might not be available
 def calculate_aqi_pm25(concentration):
     try:
-        concentration = float(concentration)  # Ensure concentration is treated as a float
+        concentration = float(concentration)
     except ValueError:
         return "Invalid data for AQI calculation"
 
@@ -48,7 +45,6 @@ def calculate_aqi_pm25(concentration):
         return "Unhealthy"
 
 
-# GUI setup
 window = Tk()
 window.geometry("800x480")
 
@@ -58,9 +54,9 @@ canvas.place(x=0, y=0)
 # Load and display the background image
 ASSETS_PATH = Path(r"assets\frame0")
 background_image = PhotoImage(file=ASSETS_PATH / "image_1.png")
-canvas.create_image(400, 240, image=background_image)  # Assuming 800x480 is the size of your image
+canvas.create_image(400, 240, image=background_image)
 
-customFont = ("Open Sans", 35, "bold")  # Example: Arial, 12pt, bold
+customFont = ("Open Sans", 35, "bold") 
 
 entry_1 = Text(window, bd=0, bg="light gray", fg="#000716", highlightthickness=0, font=customFont)
 entry_1.place(x=50.0, y=50.0, width=300.0, height=168.0)
@@ -81,8 +77,8 @@ entry_time.place(x=50.0, y=50.0, width=300.0, height=168.0)
 def update_time():
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
-    entry_time.delete("1.0", "end")  # Clear the previous time
-    entry_time.insert("end", f"Local Time: \n{current_time}")  # Insert the current time
+    entry_time.delete("1.0", "end")  
+    entry_time.insert("end", f"Local Time: \n{current_time}")
     window.after(1000, update_time)
 
 
